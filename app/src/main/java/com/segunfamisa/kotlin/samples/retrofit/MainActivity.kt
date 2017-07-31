@@ -3,16 +3,17 @@ package com.segunfamisa.kotlin.samples.retrofit
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
 import android.widget.TextView
+import com.segunfamisa.kotlin.samples.retrofit.data.kotlin.SearchRepository
 import com.segunfamisa.kotlin.samples.retrofit.data.kotlin.SearchRepositoryProvider
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
+
 
 class MainActivity : AppCompatActivity() {
 
-    val compositeDisposable: CompositeDisposable = CompositeDisposable()
     val message : TextView by lazy { findViewById(R.id.message) as TextView }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,22 +21,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         // Note: the only code changes from this is to use textview
         val repository = SearchRepositoryProvider.provideSearchRepository()
-        compositeDisposable.add(
-                repository.searchUsers("Lagos", "Java")
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe ({
-                            result ->
-                            Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
-                            message.text = "There are ${result.items.size} Java developers in Lagos"
-                        }, { error ->
-                            error.printStackTrace()
-                        })
-        )
+
+        loadInfo(repository)
+
     }
 
-    override fun onDestroy() {
-        compositeDisposable.clear()
-        super.onDestroy()
+    private fun loadInfo(repository: SearchRepository) = async(UI) {
+
+        val result = bg { repository.searchUsers("Lagos", "Java")}
+        val size = result.await()?.size
+        Log.d("Result", "There are ${size} Java developers in Lagos")
+        message.text = "There are ${size} Java developers in Lagos"
     }
 }
