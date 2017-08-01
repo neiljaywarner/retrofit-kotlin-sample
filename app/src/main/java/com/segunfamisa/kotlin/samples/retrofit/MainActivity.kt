@@ -24,12 +24,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadInfo() = async(UI) {
+        try {
+            val repository = SearchRepositoryProvider.provideSearchRepository()
 
-        val repository = SearchRepositoryProvider.provideSearchRepository()
-        val result = bg { repository.searchUsers("Lagos", "Java")}
-        val size = result.await()?.size
-        Log.d("Result", "There are ${size} Java developers in Lagos")
-        message.text = "There are ${size} Java developers in Lagos"
-        //TODO: put in and test ecpetion
+            val result = bg { repository.searchUsers("Lagos", "Java")}
+            val size = result.await()?.size
+            Log.d("Result", "There are ${size} Java developers in Lagos")
+            message.text = "There are ${size} Java developers in Lagos"
+        } catch (e : Exception) {
+            Log.e("boom", "boomfrom bg")
+
+        }
+
+        //TODO: put in and test ecpetion, if fail silently, obvioulsy bad
+
     }
 }
