@@ -17,7 +17,7 @@ interface GithubApiService {
         fun create(): com.segunfamisa.kotlin.samples.retrofit.data.kotlin.GithubApiService {
             val retrofit = retrofit2.Retrofit.Builder()
                     .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
-                    .baseUrl("https://api.github.com/")
+                    .baseUrl("https://api.github.com2/")
                     .build()
 
             return retrofit.create(GithubApiService::class.java);

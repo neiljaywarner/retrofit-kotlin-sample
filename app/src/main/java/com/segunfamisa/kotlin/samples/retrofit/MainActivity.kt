@@ -30,5 +30,6 @@ class MainActivity : AppCompatActivity() {
         val size = result.await()?.size
         Log.d("Result", "There are ${size} Java developers in Lagos")
         message.text = "There are ${size} Java developers in Lagos"
+        //TODO: put in and test ecpetion
     }
 }
