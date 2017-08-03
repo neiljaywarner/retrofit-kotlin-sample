@@ -9,10 +9,11 @@ import java.io.IOException
  * Repository method to access search functionality of the api service
  */
 class SearchRepository(val apiService: GithubApiService) {
-
-    fun searchUsers(location: String, language: String): List<User>?  {
+    // searchUsers() method
+    fun backGroundMethod1(location: String, language: String): List<User>?  {
         //Log.d("NJW", "code=" + result.code() )
-        throw Exception("boom");
+        Log.d("BoomTest", "In backGroundMethod1, about to run backGroundMethod2")
+        backGroundMethod2()
 
         val call : Call<Result> = apiService.search(query = "location:$location language:$language")
         /*try {
@@ -32,6 +33,11 @@ class SearchRepository(val apiService: GithubApiService) {
 
 
         // TODO: Does it go to the main thread...
+        return null;
+    }
 
+    fun backGroundMethod2() {
+        Log.d("BoomTest", "In backgroundMethod2")
+        throw Exception("boom: Exception in backgroundmethod2");
     }
 }
